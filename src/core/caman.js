@@ -43,11 +43,8 @@ export default class Caman extends Module {
   // @proparty [String] The GET param used with the proxy script.
   static proxyParam = 'camanProxyUrl'
 
-  // @property [Boolean] Are we in a NodeJS environment?
-  static NodeJS = typeof exports !== 'undefined'
-
   // @property [Boolean] Are we in a wechat mini program environment?
-  static wechat = typeof exports !== 'undefined'
+  static wechat = typeof wx !== 'undefined'
 
   // @property [Boolean] Should we check the DOM for images with Caman instructions?
   static autoload = !Caman.NodeJS
@@ -62,9 +59,6 @@ export default class Caman extends Module {
   // @param [DOMObject] canvas The canvas to inspect.
   // @return [String] The Caman ID associated with this canvas.
   static getAttrId (canvas) {
-    if (Caman.NodeJS) {
-      return true
-    }
     if (typeof canvas === 'string') {
       canvas = $(canvas)
     }
@@ -117,20 +111,18 @@ export default class Caman extends Module {
       this.finishInit = this.finishInit.bind(this)
       this.imageLoaded = this.imageLoaded.bind(this)
 
-      if (!Caman.NodeJS) {
-        const id = parseInt(Caman.getAttrId(args[0]), 10)
-        let callback
-        if (typeof args[1] === 'function') {
-          callback = args[1]
-        } else if (typeof args[1] === 'function') {
-          callback = args[2]
-        } else {
-          callback = noop
-        }
+      const id = parseInt(Caman.getAttrId(args[0]), 10)
+      let callback
+      if (typeof args[1] === 'function') {
+        callback = args[1]
+      } else if (typeof args[1] === 'function') {
+        callback = args[2]
+      } else {
+        callback = noop
+      }
 
-        if (!isNaN(id) && Store.has(id)) {
-          return Store.execute(id, callback)
-        }
+      if (!isNaN(id) && Store.has(id)) {
+        return Store.execute(id, callback)
       }
 
       // Every instance gets a unique ID. Makes it much simpler to check if two variables are the same instance.
@@ -166,25 +158,19 @@ export default class Caman extends Module {
    * @memberof Caman
    */
   domIsLoaded (cb) {
-    if (Caman.NodeJS) {
+    if (document.readyState === 'complete') {
+      Log.debug('DOM initialized')
       setTimeout(() => {
         cb.call(this)
       }, 0)
     } else {
-      if (document.readyState === 'complete') {
-        Log.debug('DOM initialized')
-        setTimeout(() => {
+      const listener = () => {
+        if (document.readyState === 'complete') {
+          Log.debug('DOM initialized')
           cb.call(this)
-        }, 0)
-      } else {
-        const listener = () => {
-          if (document.readyState === 'complete') {
-            Log.debug('DOM initialized')
-            cb.call(this)
-          }
         }
-        document.addEventListener('readystatechange', listener, false)
       }
+      document.addEventListener('readystatechange', listener, false)
     }
   }
 
@@ -242,11 +228,6 @@ export default class Caman extends Module {
    * @memberof Caman
    */
   setInitObject (obj) {
-    if (Caman.NodeJS) {
-      this.initObj = obj
-      this.initType = 'node'
-      return
-    }
     if (typeof obj === 'object') {
       this.initObj = obj
     } else {
@@ -261,16 +242,12 @@ export default class Caman extends Module {
   }
 
   /**
-   * Begins the setup process, which differs depending on whether we're in NodeJS, or if an image or canvas object was provided.
+   * Begins the setup process
    *
    * @memberof Caman
    */
   setup () {
-    console.log(this.initType)
     switch (this.initType) {
-      case 'node':
-        this.initNode()
-        break
       case 'img':
         this.initImage()
         break
@@ -279,9 +256,6 @@ export default class Caman extends Module {
         break
     }
   }
-
-  // Initialization function for NodeJS
-  initNode () {}
 
   // Initialization function for the browser and image objects.
   initImage () {
@@ -426,9 +400,7 @@ export default class Caman extends Module {
       height: this.canvas.height
     }
 
-    if (!Caman.NodeJS) {
-      Store.put(this.id, this)
-    }
+    Store.put(this.id, this)
 
     this.callback(this)
 
@@ -477,7 +449,7 @@ export default class Caman extends Module {
    * @memberof Caman
    */
   assignId () {
-    if (Caman.NodeJS || this.canvas.getAttribute('data-caman-id')) {
+    if (this.canvas.getAttribute('data-caman-id')) {
       return
     }
     this.canvas.setAttribute('data-caman-id', this.id)
@@ -494,9 +466,7 @@ export default class Caman extends Module {
     this.canvas = newCanvas
     this.context = this.canvas.getContext('2d')
 
-    if (!Caman.NodeJS) {
-      oldCanvas.parentNode.replaceChild(this.canvas, oldCanvas)
-    }
+    oldCanvas.parentNode.replaceChild(this.canvas, oldCanvas)
 
     this.width = this.canvas.width
     this.height = this.canvas.height
@@ -720,15 +690,11 @@ export default class Caman extends Module {
 
   /*
    * Grabs the canvas data, encodes it to Base64, then sets the browser location to the encoded data so that the user will be prompted to download it.
-   * If we're in NodeJS, then we can save the image to disk.
+   *
    * @see Caman
    */
   save () {
-    if (exports) {
-      this.nodeSave.apply(this, arguments)
-    } else {
-      this.browserSave.apply(this, arguments)
-    }
+    this.browserSave.apply(this, arguments)
   }
 
   browserSave (type = 'png') {
@@ -737,24 +703,6 @@ export default class Caman extends Module {
     const image = this.toBase64(type).replace(`image/${type}`, 'image/octet-stream')
     document.location.href = image
   }
-
-  // nodeSave (file, overwrite = true, callback = null) {
-  //   try {
-  //     const stats = fs.statSync(file)
-  //     if (stats.isFile() && !overwrite) {
-  //       return false
-  //     }
-  //   } catch (e) {
-  //     Log.debug(`Creating output file ${file}`)
-  //   }
-
-  //   fs.writeFile(file, this.canvas.toBuffer(), (err) => {
-  //     Log.debug(`Finished writing to ${file}`)
-  //     if (callback) {
-  //       callback.call(this, err)
-  //     }
-  //   })
-  // }
 
   /*
    * Takes the current canvas data, converts it to Base64, then sets it as the source of a new Image object and returns it.

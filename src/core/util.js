@@ -1,7 +1,6 @@
 // DOM simplifier (no jQuery dependency)
-// NodeJS compatible
 export const $ = (sel, root = document) => {
-  if (typeof sel === 'object' || typeof exports !== 'undefined') {
+  if (typeof sel === 'object') {
     return sel
   }
   return root.querySelector(sel)
