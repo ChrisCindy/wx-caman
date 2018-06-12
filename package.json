@@ -51,22 +51,35 @@
     "fibers": "*"
   },
   "devDependencies": {
-    "coffee-script": ">= 1.6.1",
-    "docco": "0.6.2",
-    "codo": "*",
-    "jsmin": "*",
-    "packer": "*",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "chai": "*",
-    "servedir": "*",
-    "cli": "*",
-    "cli-table": "*",
-    "karma": "~ 0.10",
-    "karma-mocha": "*"
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-babel": "^5.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "jsmin": "*",
+    "karma": "^0.10.10",
+    "karma-mocha": "^1.3.0",
+    "rollup": "^0.60.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-eslint": "^4.0.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-uglify": "^4.0.0"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script --reporter spec --globals Caman ./test/unit/*.coffee && ./node_modules/.bin/karma start --single-run --browsers Firefox",
     "examples": "./node_modules/servedir/bin/servedir",
     "docs": "codo",
-    "docs-server": "codo --server"
+    "docs-server": "codo --server",
+    "dev": "rollup -c rollup.dev.js",
+    "build": "rollup -c rollup.prod.js"
   }
 }
