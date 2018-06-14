@@ -4,6 +4,7 @@
 sftp-config.json
 node_modules/
 dist/
+demo/
 api/
 docs/
 examples/
