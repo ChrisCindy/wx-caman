@@ -8,6 +8,9 @@ module.exports = {
     },
     ecmaVersion: 6
   },
+  globals: {
+    wx: false
+  },
 	// https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
 	extends: 'standard',
 	// add your custom rules here
