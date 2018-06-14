@@ -9,7 +9,7 @@ export default {
     file: 'dist/caman.js',
     sourcemap: 'inline',
     name: 'Caman',
-    format: 'umd'
+    format: 'es'
   },
   plugins: [
     eslint({
