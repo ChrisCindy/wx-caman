@@ -13,7 +13,8 @@ export default class Event {
     'renderStart',
     'renderFinished',
     'blockStarted',
-    'blockFinished'
+    'blockFinished',
+    '_pixelDataReady'
   ]
 
   /**

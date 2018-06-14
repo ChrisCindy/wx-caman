@@ -26,7 +26,7 @@ export default function registerFilter (Filter) {
         b: args[2]
       }
     }
-    this.process('fillColor', (rgba) => {
+    return this.process('fillColor', (rgba) => {
       rgba.r = color.r
       rgba.g = color.g
       rgba.b = color.b
@@ -42,7 +42,7 @@ export default function registerFilter (Filter) {
   */
   Filter.register('brightness', function (adjust) {
     adjust = Math.floor(255 * (adjust / 100))
-    this.process('brightness', (rgba) => {
+    return this.process('brightness', (rgba) => {
       rgba.r += adjust
       rgba.g += adjust
       rgba.b += adjust
@@ -58,7 +58,7 @@ export default function registerFilter (Filter) {
   */
   Filter.register('saturation', function (adjust) {
     adjust *= -0.01
-    this.process('saturation', (rgba) => {
+    return this.process('saturation', (rgba) => {
       const max = Math.max(rgba.r, rgba.g, rgba.b)
 
       if (rgba.r !== max) {
@@ -84,7 +84,7 @@ export default function registerFilter (Filter) {
   */
   Filter.register('vibrance', function (adjust) {
     adjust *= -1
-    this.process('vibrance', (rgba) => {
+    return this.process('vibrance', (rgba) => {
       const max = Math.max(rgba.r, rgba.g, rgba.b)
       const avg = (rgba.r + rgba.g + rgba.b) / 3
       const amt = ((Math.abs(max - avg) * 2 / 255) * adjust) / 100
@@ -109,7 +109,7 @@ export default function registerFilter (Filter) {
   * Algorithm adopted from http://www.phpied.com/image-fun/
   */
   Filter.register('greyscale', function () {
-    this.process('greyscale', (rgba) => {
+    return this.process('greyscale', (rgba) => {
       const avg = Calculate.luminance(rgba)
       rgba.r = avg
       rgba.g = avg
@@ -126,7 +126,7 @@ export default function registerFilter (Filter) {
   */
   Filter.register('contrast', function(adjust) {
     adjust = Math.pow((adjust + 100) / 100, 2)
-    this.process('contrast', (rgba) => {
+    return this.process('contrast', (rgba) => {
       // Red channel
       rgba.r /= 255
       rgba.r -= 0.5
@@ -159,7 +159,7 @@ export default function registerFilter (Filter) {
   * Sometimes, Hue is expressed in the range of 0 to 360. If that's the terminology you're used to, think of 0 to 100 representing the percentage of Hue shift in the 0 to 360 range.
   */
   Filter.register('hue', function (adjust) {
-    this.process('hue', (rgba) => {
+    return this.process('hue', (rgba) => {
       const hsv = Convert.rgbToHSV(rgba.r, rgba.g, rgba.b)
 
       let h = hsv.h * 100
@@ -196,7 +196,7 @@ export default function registerFilter (Filter) {
       level = args[3]
     }
 
-    this.process('colorize', (rgba) => {
+    return this.process('colorize', (rgba) => {
       rgba.r -= (rgba.r - rgb.r) * (level / 100)
       rgba.g -= (rgba.g - rgb.g) * (level / 100)
       rgba.b -= (rgba.b - rgb.b) * (level / 100)
@@ -209,7 +209,7 @@ export default function registerFilter (Filter) {
   * Inverts all colors in the image by subtracting each color channel value from 255. No arguments.
   */
   Filter.register('invert', function () {
-    this.process('invert', (rgba) => {
+    return this.process('invert', (rgba) => {
       rgba.r = 255 - rgba.r
       rgba.g = 255 - rgba.g
       rgba.b = 255 - rgba.b
@@ -224,7 +224,7 @@ export default function registerFilter (Filter) {
   */
   Filter.register('sepia', function (adjust = 100) {
     adjust /= 100
-    this.process('sepia', (rgba) => {
+    return this.process('sepia', (rgba) => {
       // All three color channels have special conversion factors that
       // define what sepia is. Here we adjust each channel individually,
       // with the twist that you can partially apply the sepia filter.
@@ -242,7 +242,7 @@ export default function registerFilter (Filter) {
   * Values between 0 and 1 will lessen the contrast while values greater than 1 will increase it.
   */
   Filter.register('gamma', function (adjust) {
-    this.process('gamma', (rgba) => {
+    return this.process('gamma', (rgba) => {
       rgba.r = Math.pow(rgba.r / 255, adjust) * 255
       rgba.g = Math.pow(rgba.g / 255, adjust) * 255
       rgba.b = Math.pow(rgba.b / 255, adjust) * 255
@@ -257,7 +257,7 @@ export default function registerFilter (Filter) {
   Filter.register('noise', function (adjust) {
     adjust = Math.abs(adjust) * 2.55
 
-    this.process('noise', (rgba) => {
+    return this.process('noise', (rgba) => {
       const rand = Calculate.randomRange(adjust * -1, adjust)
       rgba.r += rand
       rgba.g += rand
@@ -274,7 +274,7 @@ export default function registerFilter (Filter) {
   Filter.register('clip', function (adjust) {
     adjust = Math.abs(adjust) * 2.55
 
-    this.process('clip', (rgba) => {
+    return this.process('clip', (rgba) => {
       if (rgba.r > 255 - adjust) {
         rgba.r = 255
       } else if (rgba.r < adjust) {
@@ -325,7 +325,7 @@ export default function registerFilter (Filter) {
       return this
     }
 
-    this.process('channels', (rgba) => {
+    return this.process('channels', (rgba) => {
       if (options.red) {
         if (options.red > 0) {
           rgba.r += (255 - rgba.r) * options.red
@@ -410,7 +410,7 @@ export default function registerFilter (Filter) {
       }
     }
 
-    this.process('curves', (rgba) => {
+    return this.process('curves', (rgba) => {
       // Now that we have the bezier curve, we do a basic hashmap lookup
       // to find and replace color values.
       for (let i = 0; i < chans.length; i++) {
@@ -435,6 +435,6 @@ export default function registerFilter (Filter) {
       ctrl1 = ctrl1.reverse()
       ctrl2 = ctrl2.reverse()
     }
-    this.curves('rgb', [0, 0], ctrl1, ctrl2, [255, 255])
+    return this.curves('rgb', [0, 0], ctrl1, ctrl2, [255, 255])
   })
 }

@@ -26,15 +26,19 @@ export default class Layer {
     this.layerID = Util.uniqid().get()
 
     // Create the canvas for this layer
-    this.canvas = document.createElement('canvas')
+    // this.canvas = document.createElement('canvas')
 
-    this.canvas.width = this.c.dimensions.width
-    this.canvas.height = this.c.dimensions.height
+    // this.canvas.width = this.c.dimensions.width
+    // this.canvas.height = this.c.dimensions.height
 
-    this.context = this.canvas.getContext('2d')
-    this.context.createImageData(this.canvas.width, this.canvas.height)
-    this.imageData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height)
-    this.pixelData = this.imageData.data
+    // this.context = this.canvas.getContext('2d')
+    // this.context.createImageData(this.canvas.width, this.canvas.height)
+    // this.imageData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height)
+    // this.pixelData = this.imageData.data
+
+    this.width = this.c.dimensions.width
+    this.height = this.c.dimensions.height
+    this.pixelData = new Uint8ClampedArray(this.c.pixelData.length)
   }
 
   // If you want to create nested layers

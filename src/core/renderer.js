@@ -60,10 +60,12 @@ export default class Renderer {
     }
   }
 
-  execute (callback) {
+  execute (camanInstance, callback) {
     this.finishedFn = callback
-    this.modPixelData = Util.dataArray(this.c.pixelData.length)
-    this.processNext()
+    Event.listen(camanInstance, '_pixelDataReady', () => {
+      this.modPixelData = Util.dataArray(this.c.pixelData.length)
+      this.processNext()
+    })
   }
 
   eachBlock (fn) {
