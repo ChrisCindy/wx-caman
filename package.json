@@ -1,54 +1,30 @@
 {
-  "name": "caman",
-  "version": "4.1.2",
-  "description": "Javascript (Ca)nvas (Man)ipulation for NodeJS and the browser",
+  "name": "wechat-caman",
+  "version": "1.0.0",
+  "description": "Javascript (Ca)nvas (Man)ipulation for Wechat mini programs based on CamanJS",
   "keywords": [
     "canvas",
     "image",
     "manipulate",
     "filter",
     "image manipulation",
-    "editing"
+    "editing",
+    "wechat",
+    "mini program"
   ],
   "homepage": "http://camanjs.com",
   "author": {
-    "name": "Ryan LeFevre",
-    "email": "meltingice8917@gmail.com",
-    "url": "http://meltingice.net"
+    "name": "ChrisCindy",
+    "email": "yxy0919@foxmail.com",
+    "url": "http://www.fecoding.cn"
   },
   "engines": {
-    "node": ">= 0.6.18"
+    "node": ">= 8.1.0"
   },
-  "contributors": [
-    {
-      "name": "Rick Waldron",
-      "url": "http://github.com/rwldrn"
-    },
-    {
-      "name": "Cezar Sa Espinola",
-      "url": "http://github.com/cezarsa"
-    },
-    {
-      "name": "Jarques Pretorius",
-      "url": "http://twitter.com/jarques"
-    },
-    {
-      "name": "Hosselaer",
-      "url": "https://github.com/Hosselaer"
-    },
-    {
-      "name": "Mario Klingemann",
-      "url": "http://www.quasimondo.com"
-    }
-  ],
-  "main": "./dist/caman.full.js",
+  "main": "./dist/caman.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/meltingice/CamanJS.git"
-  },
-  "dependencies": {
-    "canvas": "*",
-    "fibers": "*"
+    "url": "http://github.com/ChrisCindy/Wechat-CamanJS.git"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -72,14 +48,11 @@
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-eslint": "^4.0.0",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-uglify": "^4.0.0"
+    "rollup-plugin-uglify-es": "^0.0.1"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script --reporter spec --globals Caman ./test/unit/*.coffee && ./node_modules/.bin/karma start --single-run --browsers Firefox",
-    "examples": "./node_modules/servedir/bin/servedir",
-    "docs": "codo",
-    "docs-server": "codo --server",
-    "dev": "rollup -c rollup.dev.js",
+    "dev": "rollup -c rollup.dev.js -w",
     "build": "rollup -c rollup.prod.js"
   }
 }
