@@ -12,19 +12,18 @@
     "wechat",
     "mini program"
   ],
-  "homepage": "http://camanjs.com",
   "author": {
     "name": "ChrisCindy",
     "email": "yxy0919@foxmail.com",
     "url": "http://www.fecoding.cn"
   },
   "engines": {
-    "node": ">= 8.1.0"
+    "node": ">= 6.0.0"
   },
-  "main": "./dist/caman.js",
+  "main": "./dist/wxCaman.min.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/ChrisCindy/Wechat-CamanJS.git"
+    "url": "https://github.com/ChrisCindy/wxCaman.git"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -51,8 +50,7 @@
     "rollup-plugin-uglify-es": "^0.0.1"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script --reporter spec --globals Caman ./test/unit/*.coffee && ./node_modules/.bin/karma start --single-run --browsers Firefox",
-    "dev": "rollup -c rollup.dev.js -w",
+    "dev": "rollup -c rollup.dev.js",
     "build": "rollup -c rollup.prod.js"
   }
 }
