@@ -1,4 +1,4 @@
-import Caman from './caman'
+import Config from './config'
 /**
  * Simple console logger class that can be toggled on and off based on Caman.DEBUG
  *
@@ -10,7 +10,7 @@ class Logger {
     for (let i in logLevel) {
       const name = logLevel[i]
       this[name] = (...args) => {
-        if (!Caman.DEBUG) {
+        if (!Config.DEBUG) {
           return
         }
         try {

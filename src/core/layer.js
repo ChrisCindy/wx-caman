@@ -1,5 +1,4 @@
-import { $, Util } from './util'
-import Filter from './filter'
+import { Util } from './util'
 import Blender from './blender'
 
 /**
@@ -23,7 +22,7 @@ export default class Layer {
     }
 
     // Each layer gets its own unique ID
-    this.layerID = Util.uniqid().get()
+    this.layerID = Util.uniqid()
 
     // Create the canvas for this layer
     // this.canvas = document.createElement('canvas')
@@ -73,27 +72,6 @@ export default class Layer {
   // Fills this layer width a single color
   fillColor () {
     this.c.fillColor.apply(this.c, arguments)
-  }
-
-  // Loads and overlays an image onto this layer
-  overlayImage (image) {
-    if (typeof image === 'object') {
-      image = image.src
-    } else if (typeof image === 'string' && image[0] === '#') {
-      image = $(image).src
-    }
-
-    if (!image) {
-      return this
-    }
-
-    this.c.renderer.renderQueue.push({
-      type: Filter.Type.LoadOverlay,
-      src: image,
-      layer: this
-    })
-
-    return this
   }
 
   // Takes the contents of this layer and applies them to the parent layer at render time. This should never be called explicitly by the user.

@@ -52,7 +52,7 @@ export default function registerPresetFilter (Filter) {
     this.greyscale()
   })
 
-  Filter.register('sunrise', function () {
+  Filter.register('sunrise', function (vignette = true) {
     this.exposure(3.5)
     this.saturation(-5)
     this.vibrance(50)
@@ -64,7 +64,9 @@ export default function registerPresetFilter (Filter) {
     })
     this.contrast(5)
     this.gamma(1.2)
-    this.vignette('55%', 25)
+    if (vignette) {
+      this.vignette('55%', 25)
+    }
   })
 
   Filter.register('crossProcess', function () {
@@ -99,13 +101,15 @@ export default function registerPresetFilter (Filter) {
     this.gamma(1.3)
   })
 
-  Filter.register('grungy', function () {
+  Filter.register('grungy', function (vignette = true) {
     this.gamma(1.5)
     this.clip(25)
     this.saturation(-60)
     this.contrast(5)
     this.noise(5)
-    this.vignette('50%', 30)
+    if (vignette) {
+      this.vignette('50%', 30)
+    }
   })
   // FIXME:sharpen
   Filter.register('jarques', function () {
@@ -117,15 +121,17 @@ export default function registerPresetFilter (Filter) {
     this.sharpen(20)
   })
 
-  Filter.register('pinhole', function () {
+  Filter.register('pinhole', function (vignette = true) {
     this.greyscale()
     this.sepia(10)
     this.exposure(10)
     this.contrast(15)
-    this.vignette('60%', 35)
+    if (vignette) {
+      this.vignette('60%', 35)
+    }
   })
 
-  Filter.register('oldBoot', function () {
+  Filter.register('oldBoot', function (vignette = true) {
     this.saturation(-20)
     this.vibrance(-50)
     this.gamma(1.1)
@@ -135,7 +141,9 @@ export default function registerPresetFilter (Filter) {
       blue: 5
     })
     this.curves('rgb', [0, 0], [80, 50], [128, 230], [255, 255])
-    return this.vignette('60%', 30)
+    if (vignette) {
+      this.vignette('60%', 30)
+    }
   })
 
   Filter.register('glowingSun', function (vignette = true) {
@@ -146,21 +154,21 @@ export default function registerPresetFilter (Filter) {
       this.copyParent()
       this.filter.gamma(0.8)
       this.filter.contrast(50)
-      return this.filter.exposure(10)
+      this.filter.exposure(10)
     })
     this.newLayer(function () {
       this.setBlendingMode('softLight')
       this.opacity(80)
-      return this.fillColor('#f49600')
+      this.fillColor('#f49600')
     })
     this.exposure(20)
     this.gamma(0.8)
     if (vignette) {
-      return this.vignette('45%', 20)
+      this.vignette('45%', 20)
     }
   })
 
-  Filter.register('hazyDays', function () {
+  Filter.register('hazyDays', function (vignette = true) {
     this.gamma(1.2)
     this.newLayer(function () {
       this.setBlendingMode('overlay')
@@ -192,7 +200,9 @@ export default function registerPresetFilter (Filter) {
     this.curves('r', [20, 0], [128, 158], [128, 128], [235, 255])
     this.curves('g', [20, 0], [128, 128], [128, 128], [235, 255])
     this.curves('b', [20, 0], [128, 108], [128, 128], [235, 255])
-    this.vignette('45%', 20)
+    if (vignette) {
+      this.vignette('45%', 20)
+    }
   })
 
   Filter.register('herMajesty', function () {
@@ -204,10 +214,10 @@ export default function registerPresetFilter (Filter) {
       this.opacity(50)
       this.copyParent()
       this.filter.gamma(0.7)
-      return this.newLayer(function() {
+      this.newLayer(function() {
         this.setBlendingMode('normal')
         this.opacity(60)
-        return this.fillColor('#ea1c5d')
+        this.fillColor('#ea1c5d')
       })
     })
     this.newLayer(function() {
@@ -216,18 +226,18 @@ export default function registerPresetFilter (Filter) {
       this.copyParent()
       this.filter.saturation(50)
       this.filter.hue(90)
-      return this.filter.contrast(10)
+      this.filter.contrast(10)
     })
     this.gamma(1.4)
     this.vibrance(-30)
     this.newLayer(function() {
       this.opacity(10)
-      return this.fillColor('#e5f0ff')
+      this.fillColor('#e5f0ff')
     })
     return this
   })
 
-  Filter.register('nostalgia', function() {
+  Filter.register('nostalgia', function (vignette = true) {
     this.saturation(20)
     this.gamma(1.4)
     this.greyscale()
@@ -247,7 +257,9 @@ export default function registerPresetFilter (Filter) {
       this.opacity(55)
       this.filter.stackBlur(10)
     })
-    this.vignette('50%', 30)
+    if (vignette) {
+      this.vignette('50%', 30)
+    }
   })
 
   Filter.register('hemingway', function () {
@@ -271,7 +283,7 @@ export default function registerPresetFilter (Filter) {
       red: 5,
       green: -2
     })
-    return this.exposure(15)
+    this.exposure(15)
   })
 
   // FIXME: sharpen

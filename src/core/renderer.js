@@ -1,10 +1,10 @@
 import Event from './event'
-import Filter from './filter'
+import Config from './config'
 import { Util } from './util'
 import Log from './logger'
 import Plugin from './plugin'
 import Pixel from './pixel'
-import IO from './io'
+
 /**
  * Handles all of the various rendering methods in Caman. Most of the image modification happens here. A new Renderer object is created for every render operation.
  *
@@ -39,20 +39,20 @@ export default class Renderer {
     this.currentJob = this.renderQueue.shift()
 
     switch (this.currentJob.type) {
-      case Filter.Type.LayerDequeue:
+      case Config.FILTER_TYPE.LayerDequeue:
         const layer = this.c.canvasQueue.shift()
         this.c.executeLayer(layer)
         this.processNext()
         break
-      case Filter.Type.LayerFinished:
+      case Config.FILTER_TYPE.LayerFinished:
         this.c.applyCurrentLayer()
         this.c.popContext()
         this.processNext()
         break
-      case Filter.Type.LoadOverlay:
+      case Config.FILTER_TYPE.LoadOverlay:
         this.loadOverlay(this.currentJob.layer, this.currentJob.src)
         break
-      case Filter.Type.Plugin:
+      case Config.FILTER_TYPE.Plugin:
         this.executePlugin()
         break
       default:
@@ -91,7 +91,7 @@ export default class Renderer {
   executeFilter () {
     Event.trigger(this.c, 'processStart', this.currentJob)
 
-    if (this.currentJob.type === Filter.Type.Single) {
+    if (this.currentJob.type === Config.FILTER_TYPE.Single) {
       this.eachBlock(this.renderBlock)
     } else {
       this.eachBlock(this.renderKernel)
@@ -199,7 +199,7 @@ export default class Renderer {
     })
 
     if (this.blocksDone === Renderer.Blocks) {
-      if (this.currentJob.type === Filter.Type.Kernel) {
+      if (this.currentJob.type === Config.FILTER_TYPE.Kernel) {
         for (let i = 0; i < this.c.pixelData.length; i++) {
           this.c.pixelData[i] = this.modPixelData[i]
         }
@@ -230,23 +230,5 @@ export default class Renderer {
     val.g = (val.g / divisor) + bias
     val.b = (val.b / divisor) + bias
     return val
-  }
-
-  // Loads an image onto the current canvas
-  loadOverlay (layer, src) {
-    /* eslint-disable no-undef */
-    const img = new Image()
-    img.onload = () => {
-      layer.context.drawImage(img, 0, 0, this.c.dimensions.width, this.c.dimensions.height)
-      layer.imageData = layer.context.getImageData(0, 0, this.c.dimensions.width, this.c.dimensions.height)
-      layer.pixelData = layer.imageData.data
-
-      this.c.pixelData = layer.pixelData
-
-      this.processNext()
-    }
-
-    const proxyUrl = IO.remoteCheck(src)
-    img.src = proxyUrl || src
   }
 }

@@ -1,11 +1,3 @@
-// DOM simplifier (no jQuery dependency)
-export const $ = (sel, root = document) => {
-  if (typeof sel === 'object') {
-    return sel
-  }
-  return root.querySelector(sel)
-}
-
 export function noop () {}
 
 /**
@@ -15,13 +7,8 @@ export function noop () {}
  * @class Util
  */
 export class Util {
-  static uniqid () {
-    let id = 0
-    return {
-      get () {
-        return id++
-      }
-    }
+  static uniqid (len = 7) {
+    return Math.random().toString(35).substr(2, len)
   }
 
   // Helper function that extends one object with all the properies of other objects
@@ -63,8 +50,8 @@ export class Util {
 
   // Support for browsers that don't know Uint8Array (such as IE9)
   static dataArray (length = 0) {
-    if (Uint8Array) {
-      return new Uint8Array(length)
+    if (Uint8ClampedArray) {
+      return new Uint8ClampedArray(length)
     }
     return new Array(length)
   }

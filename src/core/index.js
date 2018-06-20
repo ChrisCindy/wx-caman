@@ -9,7 +9,7 @@ import { registerPlugin, registerPluginFilter } from '../lib/plugins'
 
 // wechat mini program env
 if (typeof wx === 'undefined') {
-  // throw new Error('Wechat-CamanJS can only run in wechat mini program')
+  throw new Error('Wechat-CamanJS can only run in wechat mini program')
 }
 registerBlender(Blender)
 registerFilter(Filter)

@@ -76,4 +76,51 @@ export default class Event {
     this.events[type].push({target, fn})
     return true
   }
+
+  static once (target, type, fn) {
+    const _this = this
+    function on () {
+      _this.off(target, type, on)
+      fn.apply(_this, arguments)
+    }
+    on.fn = fn
+    this.listen(target, type, on)
+  }
+
+  static off (target, type, fn) {
+    if (!arguments.length) {
+      this.events = Object.create(null)
+      return
+    }
+    // Adjust arguments if target is omitted
+    if (typeof target === 'string') {
+      const _type = target
+      const _fn = type
+
+      target = null
+      type = _type
+
+      fn = _fn
+    }
+
+    const cbs = this.events[type]
+    if (!cbs) {
+      return
+    }
+
+    if (!fn) {
+      this.events[type] = null
+    } else {
+      // specific handler
+      let cb
+      let i = cbs.length
+      while (i--) {
+        cb = cbs[i]
+        if (cb === fn || cb.fn === fn) {
+          cbs.splice(i, 1)
+          break
+        }
+      }
+    }
+  }
 }

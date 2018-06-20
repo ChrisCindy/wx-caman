@@ -1,18 +1,17 @@
 import Module from './module'
 import { noop, Util } from './util'
-import Store from './store'
 import Analyze from './analyze'
 import Renderer from './renderer'
 // import Log from './logger'
 // import IO from './io'
 import Event from './event'
-import Filter from './filter'
+import Config from './config'
 import Layer from './layer'
 
 /**
  * Here it begins. Caman is defined.
  * There are many different initialization for Caman, which are described on the [Guides](http://camanjs.com/guides).
- * Initialization is tricky because we need to make sure everything we need is actually fully oaded in the DOM before proceeding. When initialized on an image, we need to make sure that the image is done loading before converting it to a canvas element and writing the pixel data. If we do this prematurely, the browser will throw a DOM Error, and chaos will ensue. In the event that we initialize Caman on a canvas element while specifying an image URL, we need to create a new image element, load the image, then continue with initialization.
+ * Initialization is tricky because we need to make sure everything we need is actually fully loaded in the DOM before proceeding. When initialized on an image, we need to make sure that the image is done loading before converting it to a canvas element and writing the pixel data. If we do this prematurely, the browser will throw a DOM Error, and chaos will ensue. In the event that we initialize Caman on a canvas element while specifying an image URL, we need to create a new image element, load the image, then continue with initialization.
  * The main goal for Caman was simplicity, so all of this is handled transparently to the end-user.
  *
  * @export
@@ -26,19 +25,10 @@ export default class Caman extends Module {
     date: '6/08/2018'
   }
 
-  // @property [Boolean] Debug mode enables console logging.
-  static DEBUG = false
-
   // @property [Boolean] Allow reverting the canvas?
   // If your JS process is running out of memory, disabling
   // this could help drastically.
   static allowRevert = true
-
-  // @property [String] Default cross-origin policy.
-  static crossOrigin = 'anonymous'
-
-  // @property [Boolean] Are we in a wechat mini program environment?
-  static wechat = typeof wx !== 'undefined'
 
   // Custom toString()
   // @return [String] Version and release information.
@@ -47,33 +37,10 @@ export default class Caman extends Module {
   }
 
   /**
-   * The Caman function. While technically a constructor, it was made to be called without the `new` keyword. Caman will figure it out.
-   * @param { DOMObject | String } initializer The DOM selector or DOM object to initialize.
-   * @overload Caman(initializer)
-   *   Initialize Caman without a callback.
-   *
-   * @overload Caman(initializer, callback)
-   *   Initialize Caman with a callback.
-   *   @param [Function] callback Function to call once initialization completes.
-   *
-   * @overload Caman(initializer, url)
-   *   Initialize Caman with a URL to an image and no callback.
-   *   @param [String] url URl to an image to draw to the canvas.
-   *
-   * @overload Caman(initializer, url, callback)
-   *   Initialize Caman with a canvas, URL to an image, and a callback.
-   *   @param [String] url URl to an image to draw to the canvas.
-   *   @param [Function] callback Function to call once initialization completes.
-   *
-   * @overload Caman(file)
-   *   NodeJS: Initialize Caman with a path to an image file and no callback.
-   *   @param [String, File] file File object or path to image to read.
-   *
-   * @overload Caman(file, callback)
-   *   NodeJS: Initialize Caman with a file and a callback.
-   *   @param [String, File] file File object or path to image to read.
-   *   @param [Function] callback Function to call once initialization completes.
-   *
+   * The Caman function.
+   * @param { String } canvasId The canvas-id of the canvas component.
+   * @param { Number } width The width of the canvas component.
+   * @param { Number } height The height of the canvas component.
    * @return [Caman] Initialized Caman instance.
    * @memberof Caman
    */
@@ -86,44 +53,30 @@ export default class Caman extends Module {
       throw new Error('Invalid arguments')
     }
     super()
-    if (this instanceof Caman) {
-      // We have to do this to avoid polluting the global scope
-      // because of how Coffeescript binds functions specified
-      // with => and the fact that Caman can be invoked as both
-      // a function and as a 'new' object.
-      this.finishInit = this.finishInit.bind(this)
 
-      const id = args[0]
-      let callback = args[3]
-      if (typeof callback !== 'function') {
-        callback = noop
-      }
-
-      if (Store.has(id)) {
-        return Store.execute(id, callback)
-      }
-
-      // Every instance gets a unique ID. Makes it much simpler to check if two variables are the same instance.
-      this.id = id
-      this.initializedPixelData = this.originalPixelData = null
-
-      this.pixelStack = [] // Stores the pixel layers
-      this.layerStack = [] // Stores all of the layers waiting to be rendered
-      this.canvasQueue = [] // Stores all of the canvases to be processed
-      this.currentLayer = null
-      this.scaled = false
-
-      this.analyze = new Analyze(this)
-      this.renderer = new Renderer(this)
-
-      // make sure you do everything in onReady callback
-      this.parseArguments(args)
-      this.initCanvas()
-
-      return this
-    } else {
-      return new Caman(...args)
+    // const id = args[0]
+    let callback = args[3]
+    if (typeof callback !== 'function') {
+      callback = noop
     }
+
+    // Every instance gets a unique ID.
+    this.id = Util.uniqid()
+    this.initializedPixelData = this.originalPixelData = null
+
+    this.pixelStack = [] // Stores the pixel layers
+    this.layerStack = [] // Stores all of the layers waiting to be rendered
+    this.canvasQueue = [] // Stores all of the canvases to be processed
+    this.currentLayer = null
+
+    this.analyze = new Analyze(this)
+    this.renderer = new Renderer(this)
+
+    // make sure you do everything in onReady callback
+    this.parseArguments(args)
+    this.initCanvas()
+
+    return this
   }
 
   /**
@@ -201,8 +154,6 @@ export default class Caman extends Module {
       height: this.height
     }
 
-    Store.put(this.id, this)
-
     this.callback(this)
 
     // Reset the callback so re-initialization doesn't trigger it again.
@@ -234,7 +185,6 @@ export default class Caman extends Module {
    */
   render (callback = noop) {
     Event.trigger(this, 'renderStart')
-
     this.renderer.execute(this, () => {
       const _this = this
       wx.canvasPutImageData({
@@ -284,7 +234,7 @@ export default class Caman extends Module {
    */
   process (name, processFn) {
     this.renderer.add({
-      type: Filter.Type.Single,
+      type: Config.FILTER_TYPE.Single,
       name: name,
       processFn: processFn
     })
@@ -310,7 +260,7 @@ export default class Caman extends Module {
     }
 
     this.renderer.add({
-      type: Filter.Type.Kernel,
+      type: Config.FILTER_TYPE.Kernel,
       name,
       adjust,
       divisor,
@@ -330,7 +280,7 @@ export default class Caman extends Module {
    */
   processPlugin (plugin, args) {
     this.renderer.add({
-      type: Filter.Type.Plugin,
+      type: Config.FILTER_TYPE.Plugin,
       plugin,
       args
     })
@@ -352,13 +302,13 @@ export default class Caman extends Module {
       const layer = new Layer(this)
       this.canvasQueue.push(layer)
       this.renderer.add({
-        type: Filter.Type.LayerDequeue
+        type: Config.FILTER_TYPE.LayerDequeue
       })
 
       callback.call(layer)
 
       this.renderer.add({
-        type: Filter.Type.LayerFinished
+        type: Config.FILTER_TYPE.LayerFinished
       })
     })
     return this
@@ -396,22 +346,5 @@ export default class Caman extends Module {
   // Applies the current layer to its parent layer.
   applyCurrentLayer () {
     this.currentLayer.applyToParent()
-  }
-
-  /*
-   * Grabs the canvas data, encodes it to Base64, then sets the browser location to the encoded data so that the user will be prompted to download it.
-   *
-   * @see Caman
-   */
-  // TODO:
-  save (fileType = 'png') {
-    const _this = this
-    wx.canvasToTempFilePath({
-      canvasId: _this.canvas,
-      fileType,
-      success (res) {
-        console.log(res.temFilePath)
-      }
-    })
   }
 }
