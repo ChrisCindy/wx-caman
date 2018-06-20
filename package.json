@@ -1,6 +1,6 @@
 {
   "name": "wx-caman",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Javascript (Ca)nvas (Man)ipulation for Wechat mini programs based on CamanJS",
   "keywords": [
     "canvas",

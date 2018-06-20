@@ -19,17 +19,17 @@ npm install WxCaman
 然后在项目中引入：
 ```js
 // es6 modules
-import WxCaman from 'wxCaman'
+import WxCaman from 'wx-caman'
 
 // or cjs
-var WxCaman = require('WxCaman').default
+var WxCaman = require('wx-caman').default
 ```
 
 ### 直接引入文件
 
 将当前 repo 中 `dist/` 目录下的 `wxCaman.min.js` 文件直接拷贝至你的小程序项目中的 `vendor` 目录下，然后在项目中引入：
 ```js
-var WxCaman = require('vendor/wxCaman.min.js').default
+var WxCaman = require('vendor/wx-caman.min.js').default
 ```
 
 
