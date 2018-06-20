@@ -1,5 +1,5 @@
 {
-  "name": "wechat-caman",
+  "name": "wx-caman",
   "version": "1.0.0",
   "description": "Javascript (Ca)nvas (Man)ipulation for Wechat mini programs based on CamanJS",
   "keywords": [
@@ -20,10 +20,10 @@
   "engines": {
     "node": ">= 6.0.0"
   },
-  "main": "./dist/wxCaman.min.js",
+  "main": "./dist/wx-caman.min.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ChrisCindy/wxCaman.git"
+    "url": "https://github.com/ChrisCindy/wx-caman.git"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
