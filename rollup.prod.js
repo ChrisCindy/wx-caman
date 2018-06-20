@@ -6,8 +6,8 @@ import uglify from 'rollup-plugin-uglify-es'
 export default {
   input: 'src/core/index.js',
   output: {
-    file: 'dist/caman.min.js',
-    name: 'Caman',
+    file: 'dist/wxCaman.min.js',
+    name: 'WxCaman',
     format: 'es'
   },
   plugins: [

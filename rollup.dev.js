@@ -6,9 +6,9 @@ import eslint from 'rollup-plugin-eslint'
 export default {
   input: 'src/core/index.js',
   output: {
-    file: 'dist/caman.js',
+    file: 'dist/wxCaman.js',
     sourcemap: 'inline',
-    name: 'Caman',
+    name: 'WxCaman',
     format: 'es'
   },
   plugins: [
