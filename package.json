@@ -25,6 +25,7 @@
     "type": "git",
     "url": "https://github.com/ChrisCindy/wx-caman.git"
   },
+  "license" : "BSD-3-Clause",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
