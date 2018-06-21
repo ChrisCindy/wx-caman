@@ -1,4 +1,4 @@
-# wxCaman
+# wx-caman
 
 [![Build Status](https://travis-ci.com/ChrisCindy/wxCaman.svg?branch=master)](https://travis-ci.com/ChrisCindy/wxCaman)
 
@@ -6,7 +6,7 @@
 
 ## 介绍
 
-由于微信小程序中的 canvas 组件与 DOM Canvas 元素有较大差异，因此传统的 Canvas 处理库几乎无法在小程序中使用。WxCaman 由 [CamanJS](https://github.com/meltingice/CamanJS) 封装而来并针对微信小程序进行了适配。其使用基本与 CamanJS 保持一致，能够对小程序中的 canvas 进行像素级别的图像滤镜处理。
+由于微信小程序中的 canvas 组件与 DOM Canvas 元素有较大差异，因此传统的 Canvas 处理库几乎无法在小程序中使用。wx-caman 由 [CamanJS](https://github.com/meltingice/CamanJS) 封装而来并针对微信小程序进行了适配。其使用基本与 CamanJS 保持一致，能够对小程序中的 canvas 进行像素级别的图像滤镜处理。
 
 ## 安装
 
@@ -14,7 +14,7 @@
 
 在 [mpvue](https://github.com/Meituan-Dianping/mpvue) 等支持 npm 的小程序开发框架中，可以直接使用 npm 进行安装：
 ```shell
-npm install WxCaman
+npm install wx-caman
 ```
 然后在项目中引入：
 ```js
@@ -27,7 +27,7 @@ var WxCaman = require('wx-caman').default
 
 ### 直接引入文件
 
-将当前 repo 中 `dist/` 目录下的 `wxCaman.min.js` 文件直接拷贝至你的小程序项目中的 `vendor` 目录下，然后在项目中引入：
+将当前 repo 中 `dist/` 目录下的 `wx-caman.min.js` 文件直接拷贝至你的小程序项目中的 `vendor` 目录下，然后在项目中引入：
 ```js
 var WxCaman = require('vendor/wx-caman.min.js').default
 ```
@@ -35,7 +35,7 @@ var WxCaman = require('vendor/wx-caman.min.js').default
 
 ## 快速开始
 
-小程序对于 canvas 组件限制较多，详情参考[官方文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#canvas)。在使用 WxCaman 前，我们必须在 WXML 中定义 canvas 组件并且设置 canvas-id。
+小程序对于 canvas 组件限制较多，详情参考[官方文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#canvas)。在使用 wx-caman 前，我们必须在 WXML 中定义 canvas 组件并且设置 canvas-id。
 
 ```html
 <canvas style="width: 300px; height: 200px;" canvas-id="firstCanvas"></canvas>
@@ -71,7 +71,7 @@ Page({
 ## 进阶使用
 此处文档可直接参考 CamanJS 文档：[AsvancedUsage](http://camanjs.com/guides/#AdvancedUsage)
 
-注：wxCaman 不支持 Cropping/Resizing 和 Events。
+注：wx-caman 不支持 Cropping/Resizing 和 Events。
 
 ## 内置函数
 此处文档可直接参考 CamanJS 文档：[Built-In Functionality](http://camanjs.com/guides/#BuiltIn)
@@ -95,7 +95,7 @@ Page({
 - Vibrance
 
 ## 预设滤镜
-wxCaman 支持以下预设滤镜：
+wx-caman 支持以下预设滤镜：
 - vintage
 - lomo
 - sinCity
@@ -124,5 +124,5 @@ new WxCaman('firstCanvas', 300, 200, function () {
 
 
 ## 注意事项
-- 为了确保 wxCaman 准确获取 canvas 组件的像素数据，请务必在 draw 的回调函数中使用 wxCaman
-- wxCaman 需要获取到 canvas 组件的真实宽高。但在实际使用中 canvas 组件可能使用了 `width: 90%` 等相对宽高数值，此时可使用 `wx.createSelectorQuery()` 来获取到 canvas 组件渲染后的实际宽高，然后再进行 wxCaman 的初始化
+- 为了确保 wx-caman 准确获取 canvas 组件的像素数据，请务必在 draw 的回调函数中使用 wx-caman
+- wx-caman 需要获取到 canvas 组件的真实宽高。但在实际使用中 canvas 组件可能使用了 `width: 90%` 等相对宽高数值，此时可使用 `wx.createSelectorQuery()` 来获取到 canvas 组件渲染后的实际宽高，然后再进行 wx-caman 的初始化
