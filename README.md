@@ -1,6 +1,6 @@
 # wx-caman
 
-[![Build Status](https://travis-ci.com/ChrisCindy/wxCaman.svg?branch=master)](https://travis-ci.com/ChrisCindy/wxCaman)
+[![Build Status](https://travis-ci.com/ChrisCindy/wx-caman.svg?branch=v1.0.1)](https://travis-ci.com/ChrisCindy/wx-caman)
 
 > 基于 [CamanJS](https://github.com/meltingice/CamanJS) 的微信小程序 Canvas 像素级滤镜处理库
 
